@@ -1,0 +1,14 @@
+{
+  "name": "anand-anime-api",
+  "version": "1.0.0",
+  "description": "Anand Custom Elite Anime Stream API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@consumet/extensions": "^1.5.3",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
