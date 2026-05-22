@@ -3,8 +3,10 @@ const cors = require('cors');
 const { ANIME } = require('@consumet/extensions');
 
 const app = express();
-app.use(cors()); // Isse CORS error hamesha ke liye khatam!
-const gogoanime = new ANIME.Gogoanime();
+app.use(cors());
+
+// FIX: 'new' hata diya — ab direct function call hai
+const gogoanime = ANIME.Gogoanime();
 
 const PORT = process.env.PORT || 3000;
 
@@ -32,7 +34,7 @@ app.get('/info', async (req, res) => {
     }
 });
 
-// 3. Watch Links Endpoint (Direct Streaming Video URIs)
+// 3. Watch Links Endpoint
 app.get('/watch', async (req, res) => {
     try {
         const episodeId = req.query.id;
@@ -45,5 +47,5 @@ app.get('/watch', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server matrix active on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
