@@ -23,9 +23,9 @@ const AnimeSchema = new mongoose.Schema({
 
 const Anime = mongoose.model('Anime', AnimeSchema);
 
-// 2. CONNECT TO MONGOOSE DATABASE
-// Ham apni chabi (URI) Render ke Environment Variable me safe rakhenge
-const MONGO_URI = process.env.MONGO_URI;
+// 2. CONNECT TO MONGOOSE DATABASE DIRECTLY
+// Teri string ko sahi format me yahan daal diya hai
+const MONGO_URI = "mongodb+srv://anandsingh373777_db_user:anandshankar2010@anand-anime-cluster.cw7pkjf.mongodb.net/anand_anime_db?retryWrites=true&w=majority";
 
 mongoose.connect(MONGO_URI)
     .then(() => console.log("🔒 ANAND Private Cluster Database Connected Successfully!"))
@@ -39,10 +39,8 @@ cron.schedule('0 * * * *', async () => {
         const topAiring = await gogoanime.fetchTopAiring();
         if (topAiring && topAiring.results) {
             for (let item of topAiring.results) {
-                // Check agar anime pehle se DB me hai ya nahi
                 const existing = await Anime.findOne({ animeId: item.id });
                 if (!existing) {
-                    // Agar naya anime hai, toh uski complete episode info nikal kar DB me dalo
                     try {
                         const info = await gogoanime.fetchAnimeInfo(item.id);
                         await Anime.create({
@@ -65,7 +63,7 @@ cron.schedule('0 * * * *', async () => {
 });
 
 
-// 4. API ROUTES (Ab data direct tere custom DB se khinchega!)
+// 4. API ROUTES
 
 // Route A: Popular Anime List (Direct from DB)
 app.get('/popular', async (req, res) => {
@@ -83,7 +81,6 @@ app.get('/search', async (req, res) => {
         const query = req.query.q;
         if (!query) return res.status(400).json({ success: false, error: "Query missing" });
         
-        // Search filter using dynamic Regular Expression (Case Insensitive)
         const data = await Anime.find({ title: { $regex: query, $options: 'i' } });
         res.json({ success: true, results: data });
     } catch (err) {
@@ -104,15 +101,13 @@ app.get('/info', async (req, res) => {
     }
 });
 
-// Route D: Watch Live Route (Generates absolute premium streams)
+// Route D: Watch Live Route
 app.get('/watch', async (req, res) => {
     try {
         const episodeId = req.query.id;
         if (!episodeId) return res.status(400).json({ success: false, error: "Episode target invalid" });
         
-        const data = await gogoanime.fetchEpisodeSources(episodeId);
-        let finalEmbed = `https://s3taku.com/embedplus?id=${episodeId}`; // Solid base backup format
-        
+        let finalEmbed = `https://s3taku.com/embedplus?id=${episodeId}`;
         res.json({ success: true, iframe: finalEmbed });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
