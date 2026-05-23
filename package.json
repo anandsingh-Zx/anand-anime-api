@@ -1,7 +1,7 @@
 {
   "name": "anand-anime-api",
   "version": "1.0.0",
-  "description": "Premium Scraper Instance",
+  "description": "ANAND x LIVE Premium Private Cluster API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -9,6 +9,8 @@
   "dependencies": {
     "@consumet/extensions": "^1.5.3",
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "mongoose": "^8.3.4",
+    "node-cron": "^3.0.3"
   }
 }
