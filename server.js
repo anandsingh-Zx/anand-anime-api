@@ -8,46 +8,51 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 10000;
 
-// 1. DATABASE SCHEMA
+// 1. MONGOOSE DATABASE SCHEMA
 const AnimeSchema = new mongoose.Schema({
     animeId: { type: String, unique: true, required: true },
     title: String,
-    image: String,
+    poster: String,
+    banner: String,
+    synopsis: String,
+    rating: Number,
     type: String,
+    status: String,
     genres: Array,
+    languages: Array,
     episodes: Array,
     lastUpdated: { type: Date, default: Date.now }
 });
 
 const Anime = mongoose.model('Anime', AnimeSchema);
 
-// 2. CONNECT TO MONGOOSE DATABASE
+// 2. MONGOOSE CONNECTION CONFIGURE
 const MONGO_URI = "mongodb+srv://anandsingh373777_db_user:anandshankar2010@anand-anime-cluster.cw7pkjf.mongodb.net/anand_anime_db?retryWrites=true&w=majority";
 
 mongoose.connect(MONGO_URI)
-    .then(() => console.log("🔒 ANAND VIP Private Cluster Connected!"))
-    .catch((err) => console.error("❌ DB Connection Failed:", err));
+    .then(() => console.log("🔒 Anand Private Cluster Connected!"))
+    .catch((err) => console.error("❌ DB Connection Error:", err));
 
-
-// 3. MASTER INJECTION DATA (Direct inside code - No Third Party dependency)
+// 3. MASTER INJECTION DATA (15 Blockbusters with Full Track Data Structure)
 const MASTER_ANIME_DATA = [
-    { id: "naruto", title: "Naruto", image: "https://gogocdn.net/images/anime/N/naruto.jpg", genres: ["Action", "Ninja", "Shounen"], totalEpisodes: 220 },
-    { id: "naruto-shippuden", title: "Naruto Shippuden", image: "https://gogocdn.net/cover/naruto-shippuden.png", genres: ["Action", "Super Power", "Shounen"], totalEpisodes: 500 },
-    { id: "one-piece", title: "One Piece", image: "https://gogocdn.net/cover/one-piece-tv.png", genres: ["Action", "Adventure", "Fantasy"], totalEpisodes: 1100 },
-    { id: "jujutsu-kaisen", title: "Jujutsu Kaisen", image: "https://gogocdn.net/cover/jujutsu-kaisen-tv.png", genres: ["Action", "Demons", "Supernatural"], totalEpisodes: 24 },
-    { id: "jujutsu-kaisen-2nd-season", title: "Jujutsu Kaisen 2nd Season", image: "https://gogocdn.net/cover/jujutsu-kaisen-2nd-season.png", genres: ["Action", "Supernatural"], totalEpisodes: 23 },
-    { id: "demon-slayer-kimetsu-no-yaiba", title: "Demon Slayer", image: "https://gogocdn.net/cover/kimetsu-no-yaiba.png", genres: ["Action", "Demons", "Historical"], totalEpisodes: 26 },
-    { id: "attack-on-titan", title: "Attack on Titan", image: "https://gogocdn.net/images/anime/shingeki-no-kyojin.jpg", genres: ["Action", "Military", "Fantasy"], totalEpisodes: 25 },
-    { id: "my-hero-academia", title: "My Hero Academia", image: "https://gogocdn.net/cover/boku-no-hero-academia.png", genres: ["Action", "Comedy", "Super Power"], totalEpisodes: 13 },
-    { id: "black-clover", title: "Black Clover", image: "https://gogocdn.net/cover/black-clover.png", genres: ["Action", "Comedy", "Fantasy"], totalEpisodes: 170 },
-    { id: "hunter-x-hunter-2011", title: "Hunter x Hunter (2011)", image: "https://gogocdn.net/cover/hunter-x-hunter-2011.png", genres: ["Action", "Adventure", "Shounen"], totalEpisodes: 148 },
-    { id: "death-note", title: "Death Note", image: "https://gogocdn.net/images/anime/D/death-note.jpg", genres: ["Mystery", "Psychological", "Thriller"], totalEpisodes: 37 },
-    { id: "tokyo-ghoul", title: "Tokyo Ghoul", image: "https://gogocdn.net/cover/tokyo-ghoul.png", genres: ["Action", "Mystery", "Horror"], totalEpisodes: 12 },
-    { id: "one-punch-man", title: "One Punch Man", image: "https://gogocdn.net/cover/one-punch-man-tv.png", genres: ["Action", "Comedy", "Sci-Fi"], totalEpisodes: 12 },
-    { id: "chainsaw-man", title: "Chainsaw Man", image: "https://gogocdn.net/cover/chainsaw-man.png", genres: ["Action", "Adventure", "Gore"], totalEpisodes: 12 },
-    { id: "solo-leveling", title: "Solo Leveling", image: "https://gogocdn.net/cover/solo-leveling.png", genres: ["Action", "Adventure", "Fantasy"], totalEpisodes: 12 }
+    { id: "naruto", title: "Naruto", poster: "https://gogocdn.net/images/anime/N/naruto.jpg", genres: ["Action", "Ninja", "Shounen"], totalEpisodes: 220, rating: 8.4 },
+    { id: "naruto-shippuden", title: "Naruto Shippuden", poster: "https://gogocdn.net/cover/naruto-shippuden.png", genres: ["Action", "Super Power", "Shounen"], totalEpisodes: 500, rating: 8.7 },
+    { id: "one-piece", title: "One Piece", poster: "https://gogocdn.net/cover/one-piece-tv.png", genres: ["Action", "Adventure", "Fantasy"], totalEpisodes: 1100, rating: 8.9 },
+    { id: "jujutsu-kaisen", title: "Jujutsu Kaisen", poster: "https://gogocdn.net/cover/jujutsu-kaisen-tv.png", genres: ["Action", "Demons", "Supernatural"], totalEpisodes: 24, rating: 8.6 },
+    { id: "jujutsu-kaisen-2nd-season", title: "Jujutsu Kaisen 2nd Season", poster: "https://gogocdn.net/cover/jujutsu-kaisen-2nd-season.png", genres: ["Action", "Supernatural"], totalEpisodes: 23, rating: 8.8 },
+    { id: "demon-slayer-kimetsu-no-yaiba", title: "Demon Slayer", poster: "https://gogocdn.net/cover/kimetsu-no-yaiba.png", genres: ["Action", "Demons", "Historical"], totalEpisodes: 26, rating: 8.5 },
+    { id: "attack-on-titan", title: "Attack on Titan", poster: "https://gogocdn.net/images/anime/shingeki-no-kyojin.jpg", genres: ["Action", "Military", "Fantasy"], totalEpisodes: 25, rating: 9.1 },
+    { id: "my-hero-academia", title: "My Hero Academia", poster: "https://gogocdn.net/cover/boku-no-hero-academia.png", genres: ["Action", "Comedy", "Super Power"], totalEpisodes: 13, rating: 7.9 },
+    { id: "black-clover", title: "Black Clover", poster: "https://gogocdn.net/cover/black-clover.png", genres: ["Action", "Comedy", "Fantasy"], totalEpisodes: 170, rating: 8.1 },
+    { id: "hunter-x-hunter-2011", title: "Hunter x Hunter (2011)", poster: "https://gogocdn.net/cover/hunter-x-hunter-2011.png", genres: ["Action", "Adventure", "Shounen"], totalEpisodes: 148, rating: 9.0 },
+    { id: "death-note", title: "Death Note", poster: "https://gogocdn.net/images/anime/D/death-note.jpg", genres: ["Mystery", "Psychological", "Thriller"], totalEpisodes: 37, rating: 8.6 },
+    { id: "tokyo-ghoul", title: "Tokyo Ghoul", poster: "https://gogocdn.net/cover/tokyo-ghoul.png", genres: ["Action", "Mystery", "Horror"], totalEpisodes: 12, rating: 7.8 },
+    { id: "one-punch-man", title: "One Punch Man", poster: "https://gogocdn.net/cover/one-punch-man-tv.png", genres: ["Action", "Comedy", "Sci-Fi"], totalEpisodes: 12, rating: 8.5 },
+    { id: "chainsaw-man", title: "Chainsaw Man", poster: "https://gogocdn.net/cover/chainsaw-man.png", genres: ["Action", "Adventure", "Gore"], totalEpisodes: 12, rating: 8.4 },
+    { id: "solo-leveling", title: "Solo Leveling", poster: "https://gogocdn.net/cover/solo-leveling.png", genres: ["Action", "Adventure", "Fantasy"], totalEpisodes: 12, rating: 8.5 }
 ];
 
+// DATA SEED ROUTE (Hit only once to refresh schema structure)
 app.get('/import-global-anime', async (req, res) => {
     try {
         let addedCount = 0;
@@ -57,76 +62,61 @@ app.get('/import-global-anime', async (req, res) => {
                 let episodeArray = [];
                 for(let i = 1; i <= item.totalEpisodes; i++) {
                     episodeArray.push({
-                        episodeNumber: i,
+                        episodeNum: i,
                         episodeId: `${item.id}-episode-${i}`
                     });
                 }
                 await Anime.create({
                     animeId: item.id,
                     title: item.title,
-                    image: item.image,
+                    poster: item.poster,
+                    banner: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1920",
+                    synopsis: `Watch high-speed legal secure streams for ${item.title} inside Anand Anime Hub network layout. Multi-language track feeds embedded.`,
+                    rating: item.rating,
                     type: "TV",
+                    status: "Ongoing",
                     genres: item.genres,
+                    languages: ["hindi", "english", "japanese"],
                     episodes: episodeArray
                 });
                 addedCount++;
             }
         }
-        res.json({ 
-            success: true, 
-            message: `Bhai VIP System Active! ${addedCount} Blockbuster Anime tere database me direct bina kisi error ke load ho gaye!` 
-        });
+        res.json({ success: true, message: `Anand Engine Synced! Loaded ${addedCount} packages.` });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// 4. API ROUTES FOR WEB FRONTEND
-app.get('/popular', async (req, res) => {
+// FRONTEND SYNC API ROUTE
+app.get('/api/anime', async (req, res) => {
     try {
-        const data = await Anime.find({}).limit(30);
-        res.json({ success: true, results: data });
+        const data = await Anime.find({});
+        res.json(data);
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ error: err.message });
     }
 });
 
-app.get('/search', async (req, res) => {
-    try {
-        const query = req.query.q;
-        if (!query) return res.status(400).json({ success: false, error: "Query missing" });
-        const data = await Anime.find({ title: { $regex: query, $options: 'i' } }).limit(20);
-        res.json({ success: true, results: data });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
-
-app.get('/info', async (req, res) => {
-    try {
-        const animeId = req.query.id;
-        const target = await Anime.findOne({ animeId: animeId });
-        if (!target) return res.status(404).json({ success: false, error: "Anime not found" });
-        res.json({ success: true, title: target.title, image: target.image, genres: target.genres, episodes: target.episodes });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
-
-// 🔥 DYNAMIC ULTRA-FAST VIDEO ROUTE (Updated to fast global proxy)
+// 🔥 ANTI-REDIRECT EMBED ROUTE FOR SANDBOX COMPATIBILITY
 app.get('/watch', async (req, res) => {
     try {
         const episodeId = req.query.id;
         if (!episodeId) return res.status(400).json({ success: false, error: "Episode ID missing" });
         
-        // Is bar anitaku ka secure high-speed gateway lagaya h jo kabhi network access error nahi dega
-        let globalCinemaLink = `https://anitaku.to/embedplus?id=${episodeId}`;
-        res.json({ success: true, iframe: globalCinemaLink });
+        // Parsing parameters for clean embed stream engine structure
+        let parts = episodeId.split('-episode-');
+        let baseAnimeId = parts[0];
+        let epNum = parts[1] || "1";
+
+        // Vidsrc premium secure stream layout (No redirects allowed)
+        let embeddedStreamUrl = `https://vidsrc.me/embed/anime?id=${baseAnimeId}&ep=${epNum}`;
+        res.json({ success: true, iframe: embeddedStreamUrl });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 ANAND VIP Cluster Engine Online on Port ${PORT}`);
+    console.log(`🚀 Secure Anand Cluster Server Online on Port ${PORT}`);
 });
