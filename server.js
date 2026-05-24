@@ -48,12 +48,9 @@ const MASTER_ANIME_DATA = [
     { id: "solo-leveling", title: "Solo Leveling", image: "https://gogocdn.net/cover/solo-leveling.png", genres: ["Action", "Adventure", "Fantasy"], totalEpisodes: 12 }
 ];
 
-// SECRET COOPERATIVE IMPORT ROUTE
 app.get('/import-global-anime', async (req, res) => {
-    console.log("🚀 Injecting Solid Core Anime Database...");
     try {
         let addedCount = 0;
-
         for (let item of MASTER_ANIME_DATA) {
             const existing = await Anime.findOne({ animeId: item.id });
             if (!existing) {
@@ -64,7 +61,6 @@ app.get('/import-global-anime', async (req, res) => {
                         episodeId: `${item.id}-episode-${i}`
                     });
                 }
-
                 await Anime.create({
                     animeId: item.id,
                     title: item.title,
@@ -76,17 +72,14 @@ app.get('/import-global-anime', async (req, res) => {
                 addedCount++;
             }
         }
-
         res.json({ 
             success: true, 
-            message: `Bhai VIP System Active! ${addedCount} Blockbuster Anime tere database me direct bina kisi internet API ke load ho gaye!` 
+            message: `Bhai VIP System Active! ${addedCount} Blockbuster Anime tere database me direct bina kisi error ke load ho gaye!` 
         });
-
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
-
 
 // 4. API ROUTES FOR WEB FRONTEND
 app.get('/popular', async (req, res) => {
@@ -102,7 +95,6 @@ app.get('/search', async (req, res) => {
     try {
         const query = req.query.q;
         if (!query) return res.status(400).json({ success: false, error: "Query missing" });
-        
         const data = await Anime.find({ title: { $regex: query, $options: 'i' } }).limit(20);
         res.json({ success: true, results: data });
     } catch (err) {
@@ -115,20 +107,21 @@ app.get('/info', async (req, res) => {
         const animeId = req.query.id;
         const target = await Anime.findOne({ animeId: animeId });
         if (!target) return res.status(404).json({ success: false, error: "Anime not found" });
-        
         res.json({ success: true, title: target.title, image: target.image, genres: target.genres, episodes: target.episodes });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
 });
 
+// 🔥 DYNAMIC ULTRA-FAST VIDEO ROUTE (Updated to fast global proxy)
 app.get('/watch', async (req, res) => {
     try {
         const episodeId = req.query.id;
         if (!episodeId) return res.status(400).json({ success: false, error: "Episode ID missing" });
         
-        let cleanEmbedUrl = `https://s3taku.com/embedplus?id=${episodeId}`;
-        res.json({ success: true, iframe: cleanEmbedUrl });
+        // Is bar anitaku ka secure high-speed gateway lagaya h jo kabhi network access error nahi dega
+        let globalCinemaLink = `https://anitaku.to/embedplus?id=${episodeId}`;
+        res.json({ success: true, iframe: globalCinemaLink });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
