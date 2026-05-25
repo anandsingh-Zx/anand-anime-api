@@ -8,7 +8,12 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 10000;
 
-// 1. DATABASE SCHEMA
+// 🔥 FIX 1: AB MAIN LINK OPEN KARNE PAR "NOT FOUND" NAHI AAYEGA
+app.get('/', (req, res) => {
+    res.send("<h1>🔒 Anand Anime Hub Private Server is Online!</h1><p>Database and secure routing layers are fully active.</p>");
+});
+
+// DATABASE SCHEMA
 const AnimeSchema = new mongoose.Schema({
     animeId: { type: String, unique: true, required: true },
     title: String,
@@ -26,7 +31,7 @@ const AnimeSchema = new mongoose.Schema({
 
 const Anime = mongoose.model('Anime', AnimeSchema);
 
-// 2. MONGOOSE CONNECTION CONFIGURE
+// MONGOOSE CONNECTION
 const MONGO_URI = "mongodb+srv://anandsingh373777_db_user:anandshankar2010@anand-anime-cluster.cw7pkjf.mongodb.net/anand_anime_db?retryWrites=true&w=majority";
 
 mongoose.connect(MONGO_URI)
@@ -52,7 +57,7 @@ const MASTER_ANIME_DATA = [
     { id: "solo-leveling", title: "Solo Leveling", poster: "https://gogocdn.net/cover/solo-leveling.png", genres: ["Action", "Adventure", "Fantasy"], totalEpisodes: 12, rating: 8.5 }
 ];
 
-// RE-SEED ENGINE
+// RE-SEED ENGINE ROUTE
 app.get('/import-global-anime', async (req, res) => {
     try {
         let addedCount = 0;
@@ -95,7 +100,7 @@ app.get('/api/anime', async (req, res) => {
     }
 });
 
-// 🔥 CLEAN AD-LESS VIDEO URL GENERATOR (100% ANTI-REDIRECT TERMINAL)
+// ANTI-REDIRECT TERMINAL WITH NEW SECURE TO-SERVER EMBED
 app.get('/watch', async (req, res) => {
     try {
         const episodeId = req.query.id;
@@ -105,7 +110,6 @@ app.get('/watch', async (req, res) => {
         let baseAnimeId = parts[0];
         let epNum = parts[1] || "1";
 
-        // Gogoanime server base dynamic source mapping to bypass redirect walls entirely
         let finalStreamLink = `https://vidsrc.to/embed/anime/${baseAnimeId}/ep-${epNum}`;
         res.json({ success: true, iframe: finalStreamLink });
     } catch (err) {
