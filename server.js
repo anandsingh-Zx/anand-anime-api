@@ -3,14 +3,19 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 const app = express();
-app.use(cors());
+
+// CORs Layer Configuration
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST']
+}));
 app.use(express.json());
 
 const PORT = process.env.PORT || 10000;
 
-// 🔥 FIX 1: AB MAIN LINK OPEN KARNE PAR "NOT FOUND" NAHI AAYEGA
+// 🔥 FORCE GLOBAL WELCOME ROUTE - Render isko bypass nahi kar sakta
 app.get('/', (req, res) => {
-    res.send("<h1>🔒 Anand Anime Hub Private Server is Online!</h1><p>Database and secure routing layers are fully active.</p>");
+    res.status(200).send("<h1>🔒 Anand Anime Hub Private Server is Online!</h1><p>Database and secure routing layers are fully active.</p>");
 });
 
 // DATABASE SCHEMA
@@ -38,7 +43,7 @@ mongoose.connect(MONGO_URI)
     .then(() => console.log("🔒 Private Cluster Connected!"))
     .catch((err) => console.error("❌ DB Connection Error:", err));
 
-// MASTER DATA FOR 15 PACKAGES
+// MASTER DATA ENGINE FOR 15 PACKAGES
 const MASTER_ANIME_DATA = [
     { id: "naruto", title: "Naruto", poster: "https://gogocdn.net/images/anime/N/naruto.jpg", genres: ["Action", "Ninja", "Shounen"], totalEpisodes: 220, rating: 8.4 },
     { id: "naruto-shippuden", title: "Naruto Shippuden", poster: "https://gogocdn.net/cover/naruto-shippuden.png", genres: ["Action", "Super Power", "Shounen"], totalEpisodes: 500, rating: 8.7 },
@@ -100,7 +105,7 @@ app.get('/api/anime', async (req, res) => {
     }
 });
 
-// ANTI-REDIRECT TERMINAL WITH NEW SECURE TO-SERVER EMBED
+// WATCH ROUTE
 app.get('/watch', async (req, res) => {
     try {
         const episodeId = req.query.id;
@@ -115,6 +120,11 @@ app.get('/watch', async (req, res) => {
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
+});
+
+// CATCH-ALL ROUTE FOR ANY OTHER UNHANDLED ERRORS
+app.use((req, res) => {
+    res.status(404).send("<h1>⚠️ Route Misconfigured</h1><p>Check your Render service settings and verify Start Command is set to 'node server.js'.</p>");
 });
 
 app.listen(PORT, () => {
